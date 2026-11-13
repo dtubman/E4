@@ -1,5 +1,24 @@
 import Phaser from "phaser";
-import { HEIGHT, WIDTH } from "./actors.ts";
+import { HEIGHT, WIDTH } from "../actors.ts";
+
+const FADE = [4, 2, 12] as const;
+const FADE_OUT_MS = 450;
+
+export function fadeIn(scene: Phaser.Scene, ms = 400): void {
+  scene.cameras.main.fadeIn(ms, ...FADE);
+}
+
+export function fadeTo(
+  scene: Phaser.Scene,
+  key: string,
+  data?: object,
+): boolean {
+  const camera = scene.cameras.main;
+  if (camera.fadeEffect.isRunning) return false;
+  camera.fadeOut(FADE_OUT_MS, ...FADE);
+  camera.once("camerafadeoutcomplete", () => scene.scene.start(key, data));
+  return true;
+}
 
 /** Parallax space shared by every scene, plus the camera's glow treatment. */
 export class Backdrop {
