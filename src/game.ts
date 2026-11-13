@@ -31,19 +31,6 @@ const VICTORY_TICKS = 180;
 /** Seconds of idling before the title hands the ship to the autopilot. */
 const IDLE_SECONDS = 8;
 
-const ENEMIES: Record<EnemyKind, {
-  hp: number;
-  score: number;
-  radius: number;
-  dropChance: number;
-  canShoot: boolean;
-}> = {
-  drone: { hp: 2, score: 100, radius: 13, dropChance: 0.015, canShoot: true },
-  dart: { hp: 1, score: 150, radius: 12, dropChance: 0.015, canShoot: false },
-  turret: { hp: 12, score: 400, radius: 19, dropChance: 0.3, canShoot: true },
-  lancer: { hp: 4, score: 250, radius: 15, dropChance: 0.06, canShoot: true },
-};
-
 /** Lines of the closing story and when (seconds) each appears. */
 const STORY: [number, string][] = [
   [0.8, "The Warden's lights go dark, one ring at a time."],
@@ -429,29 +416,8 @@ export class GameScene extends Phaser.Scene implements Arena {
     }
   }
 
-  private spawn(
-    kind: EnemyKind,
-    x: number,
-    y: number,
-    side: number,
-  ): void {
-    const { hp, score, radius, dropChance, canShoot } = ENEMIES[kind];
-    this.enemies.push(
-      new ShmupPrefabSprite(
-        this,
-        x,
-        y,
-        kind,
-        hp,
-        score,
-        radius,
-        dropChance,
-        canShoot,
-        false,
-        x,
-        side,
-      ),
-    );
+  private spawn(kind: EnemyKind, x: number, y: number, side: number): void {
+    this.enemies.push(new ShmupPrefabSprite(this, kind, x, y, side));
   }
 
   private startBoss(): void {
